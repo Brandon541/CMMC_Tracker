@@ -4,6 +4,7 @@
 **112 Controls | 251 Assessment Objectives | Individual Note-Taking**
 
 A comprehensive web-based application for tracking CMMC (Cybersecurity Maturity Model Certification) Level 2 compliance with all controls and assessment objectives, including individual note-taking capabilities for detailed compliance documentation.
+![image](https://github.com/user-attachments/assets/2e3cb054-d0c9-4a11-912d-f02b5607ebe6)
 
 ## Features
 
