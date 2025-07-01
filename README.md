@@ -12,6 +12,7 @@ A comprehensive web-based application for tracking CMMC (Cybersecurity Maturity 
 - **Controls Management**: Track implementation status of all CMMC Level 2 controls
 - **POA&M Management**: Create, manage, and track Plans of Action and Milestones
 - **Artifact Storage**: Upload and manage compliance documentation and evidence
+  ``` Still under development ```
 - **Responsive Design**: Works on desktop and mobile devices
 
 ## Setup Instructions
@@ -48,7 +49,7 @@ A comprehensive web-based application for tracking CMMC (Cybersecurity Maturity 
 
 2. Open your web browser and navigate to:
    ```
-   http://localhost:5000
+   http://localhost:8080
    ```
 
 ## Usage
@@ -128,4 +129,4 @@ The application tracks controls across these domains:
 
 ## Support
 
-This is a prototype application designed to demonstrate CMMC compliance tracking capabilities. For production use, additional development and security hardening would be required.
+This is a prototype application designed to demonstrate CMMC compliance tracking capabilities. For production use, additional development and security hardening is required.
