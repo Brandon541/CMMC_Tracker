@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMMC Level 2 Compliance Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CMMC Level 2 Compliance Tracker</h1>
+            <nav>
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active">Dashboard</a></li>
+                    <li><a href="#controls" class="nav-link">Controls</a></li>
+                    <li><a href="#poams" class="nav-link">POA&Ms</a></li>
+                    <li><a href="#artifacts" class="nav-link">Artifacts</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <h2>Compliance Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Overall Compliance</h3>
+                    <div class="progress-circle">
+                        <canvas id="complianceChart" width="150" height="150"></canvas>
+                        <div class="progress-text">72%</div>
+                    </div>
+                </div>
+                <div class="stat-card clickable" id="activePoamsCard">
+                    <h3>Active POA&Ms</h3>
+                    <div class="stat-number" id="activePoamsCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Controls Implemented</h3>
+                    <div class="stat-number" id="controlsImplementedCount">0/0</div>
+                </div>
+                <div class="stat-card clickable" id="highPriorityCard">
+                    <h3>High Priority Issues</h3>
+                    <div class="stat-number critical" id="highPriorityCount">0</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Compliance by Domain</h3>
+                <canvas id="domainChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Controls Section -->
+        <section id="controls" class="section">
+            <h2>CMMC Level 2 Controls</h2>
+            <div class="controls-filter">
+                <select id="domainFilter">
+                    <option value="all">All Domains</option>
+                    <option value="AC">Access Control (AC)</option>
+                    <option value="AT">Awareness and Training (AT)</option>
+                    <option value="AU">Audit and Accountability (AU)</option>
+                    <option value="CM">Configuration Management (CM)</option>
+                    <option value="IA">Identification and Authentication (IA)</option>
+                    <option value="IR">Incident Response (IR)</option>
+                    <option value="MA">Maintenance (MA)</option>
+                    <option value="MP">Media Protection (MP)</option>
+                    <option value="PE">Physical Protection (PE)</option>
+                    <option value="PS">Personnel Security (PS)</option>
+                    <option value="RA">Risk Assessment (RA)</option>
+                    <option value="SA">System and Services Acquisition (SA)</option>
+                    <option value="SC">System and Communications Protection (SC)</option>
+                    <option value="SI">System and Information Integrity (SI)</option>
+                </select>
+                <select id="statusFilter">
+                    <option value="all">All Statuses</option>
+                    <option value="implemented">Implemented</option>
+                    <option value="partial">Partially Implemented</option>
+                    <option value="not-implemented">Not Implemented</option>
+                </select>
+            </div>
+            <div id="controlsList" class="controls-list"></div>
+        </section>
+
+        <!-- POAMs Section -->
+        <section id="poams" class="section">
+            <h2>Plans of Action and Milestones (POA&Ms)</h2>
+            <button id="addPoamBtn" class="btn btn-primary">Add New POA&M</button>
+            <div id="poamsList" class="poams-list"></div>
+        </section>
+
+        <!-- Artifacts Section -->
+        <section id="artifacts" class="section">
+            <h2>Compliance Artifacts</h2>
+            <div class="upload-section">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput" name="file" multiple>
+                        <p>Drag and drop files here or click to browse</p>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload Files</button>
+                </form>
+            </div>
+            <div id="artifactsList" class="artifacts-list"></div>
+        </section>
+    </div>
+
+    <!-- Modals -->
+    <div id="poamModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add/Edit POA&M</h2>
+            <form id="poamForm">
+                <div class="form-container">
+                <div class="form-group">
+                    <label for="poamTitle">Title:</label>
+                    <input type="text" id="poamTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="poamControl">Related Control:</label>
+                    <select id="poamControl" name="control">
+                        <option value="">Select Control</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="poamDescription">Description:</label>
+                    <textarea id="poamDescription" name="description" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="poamPriority">Priority:</label>
+                    <select id="poamPriority" name="priority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="poamDueDate">Due Date:</label>
+                    <input type="date" id="poamDueDate" name="dueDate">
+                </div>
+                <div class="form-group">
+                    <label for="poamAssignee">Assignee:</label>
+                    <input type="text" id="poamAssignee" name="assignee">
+                </div>
+                <div class="form-group">
+                    <label for="poamStatus">Status:</label>
+                    <select id="poamStatus" name="status">
+                        <option value="not-started">Not Started</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="on-hold">On Hold</option>
+                    </select>
+                </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save POA&M</button>
+                    <button type="button" class="btn btn-secondary" id="cancelPoam">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
